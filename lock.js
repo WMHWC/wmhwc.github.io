@@ -53,18 +53,54 @@
   document.addEventListener('visibilitychange',function(){if(!document.hidden)check()});
   window.addEventListener('focus',check);
 
-  // 도구 바꾸기 줄: 홈을 안 거치고 바로 다른 도구로 가요. 새 도구가 생기면 TOOLS 에 한 줄만 더해요.
-  var TOOLS=[['/','🏠 홈'],['/nameplate/','🏷️ 명찰 만들기'],['/report/','📊 결과보고 그래프']];
-  function nav(){
-    var here=location.pathname.replace(/index\.html$/,'');if(here==='/'||document.getElementById('wmNav'))return;
+  /* ── 위쪽 머리줄(로고 · 도구 탭 · 다크모드) ── 새 도구가 생기면 TOOLS 에 한 줄만 더해요. */
+  var IC={home:'<path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/><path d="M10 21v-6h4v6"/>',
+    tag:'<rect x="3" y="5" width="18" height="14" rx="2.5"/><circle cx="9" cy="11" r="2"/><path d="M5.8 16c.7-1.6 5.7-1.6 6.4 0M15 10h3.5M15 14h3.5"/>',
+    chart:'<path d="M4 20V4M4 20h16"/><rect x="7.5" y="11" width="3" height="6"/><rect x="12.5" y="7" width="3" height="10"/><rect x="17.5" y="13" width="2.5" height="4"/>',
+    sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/>',
+    moon:'<path d="M20 14.5A8.5 8.5 0 0 1 9.5 4 8.5 8.5 0 1 0 20 14.5z"/>'};
+  function svg(n){return '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+IC[n]+'</svg>'}
+  var TOOLS=[['/','home','홈'],['/nameplate/','tag','명찰 만들기'],['/report/','chart','결과보고 그래프']];
+  var LOGO='/nameplate/images/logo_bottom.png',SITE='완도군 정신건강복지센터';
+  function ls(k,v){try{if(v===undefined)return localStorage.getItem(k);localStorage.setItem(k,v)}catch(e){return null}}
+  var root=document.documentElement;
+  function setTheme(t){root.setAttribute('data-theme',t);var b=document.getElementById('wmTheme');if(b){b.innerHTML=svg(t==='dark'?'moon':'sun');b.title=t==='dark'?'밝은 화면으로':'어두운 화면으로'}}
+  setTheme(ls('wmhwc_theme')==='dark'?'dark':'light');
+  st.textContent+=
+   /* 어두운 화면: 화면에서만 (인쇄는 항상 밝게) */
+   '@media screen{html[data-theme=dark]{--bg:#0a0f18;--panel:#121a26;--ink:#e8eef6;--muted:#8fa0b5;--line:#273346;--accent:#4d94e8;--soft:#182233;color-scheme:dark}'+
+   'html[data-theme=dark] body{background:#0a0f18;color:#e8eef6}'+
+   'html[data-theme=dark] input:not([type=color]),html[data-theme=dark] textarea,html[data-theme=dark] select{background:#182233;color:#e8eef6;border-color:#273346}'+
+   'html[data-theme=dark] #wmGate{background:#0a0f18;color:#e8eef6}html[data-theme=dark] #wmGate .gf{background:#121a26}'+
+   'html[data-theme=dark] #wmNav{--nb:#0d131d;--nl:#1f2a3a;--nt:#a7b4c5;--nh:#18212f;--na:#1e2a3c;--ni:#fff}}'+
+   '#wmNav{--nb:#fff;--nl:#d9e0e8;--nt:#566373;--nh:#f1f4f7;--na:#e6ebf1;--ni:#1d2733;background:var(--nb);border-bottom:1px solid var(--nl);padding:12px max(16px,calc((100vw - 1180px)/2)) 10px;font-family:"WandoCleansea","Malgun Gothic","맑은 고딕",sans-serif}'+
+   '#wmNav .r1{display:flex;align-items:center;gap:10px;margin-bottom:10px}#wmNav .r1 img{height:34px;width:auto}#wmNav .r1 a{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ni);font-weight:700;font-size:18px;letter-spacing:-.01em}'+
+   '#wmTheme{display:grid;place-items:center;width:36px;height:36px;border-radius:10px;border:1px solid var(--nl);background:transparent;color:var(--nt);cursor:pointer;padding:0}#wmTheme:hover{background:var(--nh);color:var(--ni)}'+
+   '#wmNav .r2{display:flex;gap:4px;flex-wrap:wrap}#wmNav .r2 a{display:flex;align-items:center;gap:7px;padding:8px 14px;border-radius:10px;color:var(--nt);text-decoration:none;font-weight:700;font-size:15px}'+
+   '#wmNav .r2 a:hover{background:var(--nh);color:var(--ni)}#wmNav .r2 a.on{background:var(--na);color:var(--ni)}'+
+   '#wmSplash{position:fixed;inset:0;z-index:2147482000;display:grid;place-items:center;background:#e9edf1;color:#1d2733;transition:opacity .35s;font-family:"WandoCleansea","Malgun Gothic","맑은 고딕",sans-serif}'+
+   'html[data-theme=dark] #wmSplash{background:#0a0f18;color:#e8eef6}#wmSplash.out{opacity:0;pointer-events:none}'+
+   '#wmSplash div{display:flex;flex-direction:column;align-items:center;gap:14px;font-weight:700;font-size:17px}#wmSplash img{height:96px;animation:wmPulse 1.1s ease-in-out infinite}#wmSplash small{font-weight:400;font-size:14px;opacity:.65}'+
+   '@keyframes wmPulse{50%{transform:scale(1.07)}}'+
+   '@media print{#wmNav,#wmSplash{display:none!important}}';
+  function shell(){
+    if(document.getElementById('wmNav'))return;
+    var here=location.pathname.replace(/index\.html$/,'');
     var n=document.createElement('nav');n.id='wmNav';
-    n.innerHTML=TOOLS.map(function(t){return t[0]===here?'<b>'+t[1]+'</b>':'<a href="'+t[0]+'">'+t[1]+'</a>'}).join('');
+    n.innerHTML='<div class="r1"><a href="/"><img src="'+LOGO+'" alt="">'+SITE+'</a><button type="button" id="wmTheme" aria-label="화면 밝기 바꾸기"></button></div><div class="r2">'+
+      TOOLS.map(function(t){return '<a href="'+t[0]+'"'+(t[0]===here?' class="on" aria-current="page"':'')+'>'+svg(t[1])+t[2]+'</a>'}).join('')+'</div>';
     document.body.insertBefore(n,document.body.firstChild);
+    setTheme(root.getAttribute('data-theme'));
+    document.getElementById('wmTheme').addEventListener('click',function(){var t=root.getAttribute('data-theme')==='dark'?'light':'dark';ls('wmhwc_theme',t);setTheme(t)});
+    // 로딩 화면: 로고를 잠깐 보여주고, 화면이 다 준비되면 사라져요
+    if(!gate&&document.readyState!=='complete'){
+      var sp=document.createElement('div');sp.id='wmSplash';sp.innerHTML='<div><img src="'+LOGO+'" alt=""><span>'+SITE+'</span><small>로딩중..</small></div>';
+      document.body.appendChild(sp);var t0=Date.now();
+      var done=function(){setTimeout(function(){sp.classList.add('out');setTimeout(function(){sp.remove()},400)},Math.max(0,450-(Date.now()-t0)))};
+      window.addEventListener('load',done);setTimeout(done,4000);
+    }
   }
-  st.textContent+='#wmNav{display:flex;gap:6px;align-items:center;padding:6px 14px;background:#1d2733;font:700 14px "WandoCleansea","Malgun Gothic","맑은 고딕",sans-serif}'+
-   '#wmNav a,#wmNav b{padding:5px 12px;border-radius:8px;color:#cfd8e3;text-decoration:none}#wmNav a:hover{background:#33414f;color:#fff}#wmNav b{background:#fff;color:#1d2733}'+
-   '@media print{#wmNav{display:none!important}}';
-  if(document.body)nav();else document.addEventListener('DOMContentLoaded',nav);
+  if(document.body)shell();else{var mo=new MutationObserver(function(){if(document.body){mo.disconnect();shell()}});mo.observe(root,{childList:true})}
 
   window.WMHWC={unlocked:function(){return !gate&&isOk()}};
   if(isOk()){ss('wmhwc_t',String(Date.now()))}else{ss('wmhwc_ok',null);show('')}

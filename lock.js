@@ -105,6 +105,8 @@
   function shell(){
     if(document.getElementById('wmNav'))return;
     var here=location.pathname.replace(/index\.html$/,'');
+    // 브라우저 탭 이름 통일: '도구이름 | 완도군 정신건강복지센터'
+    TOOLS.forEach(function(t){if(t[0]===here)document.title=t[2]+' | '+SITE});
     var n=document.createElement('nav');n.id='wmNav';
     n.innerHTML='<div class="r1"><a href="/"><img src="'+LOGO+'" alt="">'+SITE+'</a><button type="button" id="wmTheme" aria-label="화면 밝기 바꾸기"></button></div><div class="r2">'+
       TOOLS.map(function(t){return '<a href="'+t[0]+'"'+(t[0]===here?' class="on" aria-current="page"':'')+'>'+svg(t[1])+t[2]+'</a>'}).join('')+'</div>';

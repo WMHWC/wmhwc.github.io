@@ -3,6 +3,13 @@
   "도구": "공통",
   "버전": "",
   "날짜": "2026-11-16",
+  "내용": "그래프는 관리자만 열 수 있게 함. 아래로 내려도 위쪽 탭(홈·명찰·그래프)이 계속 보이게 함.",
+  "자세히": "lock.js v6: ADMIN_PAGES=['/report/'] → 1208 다음에 관리자 비밀번호(SHA-256, 홈과 같음, sessionStorage 'wmhwc_admin'). #wmNav position:sticky, 90px 넘게 내리면 로고 줄 접힘(.mini), 높이는 CSS 변수 --wmNavH. 명찰 .panel/.pvbar/.newbar 의 sticky top 을 --wmNavH 아래로. 세 화면 lock.js?v=6."
+ },
+ {
+  "도구": "공통",
+  "버전": "",
+  "날짜": "2026-11-16",
   "내용": "홈에 업데이트·문의 탭. 전체공개 업데이트는 v1.0.0부터 새로 시작, 예전 기록은 관리자 기록으로.",
   "자세히": "공개: /updates.json (사이트 버전 1.0.0~, 그래프 완성 후 문의·자잘한 업데이트마다 버전 올림). 관리자: /admin-updates.json (관리자 비밀번호 → '🔧 관리자 기록' 탭, sessionStorage 'wmhwc_admin'). 홈 안내 문구 삭제. 문의 탭은 자리만. 주의: admin-updates.json은 주소 알면 열림."
  },

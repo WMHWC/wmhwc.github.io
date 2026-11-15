@@ -1,5 +1,5 @@
 /* WMHWC 공통 잠금 (홈 · 명찰 · 결과보고 그래프가 같이 써요)
-   - 숫자 4자리를 누르면 바로 들어가요. 한 번 맞히면 같은 창(탭)에서는 다시 안 물어봐요.
+   - 한 번 맞히면 같은 창(탭)에서는 다시 안 물어봐요.
    - 5분 동안 아무것도 안 하면 화면을 가려요. 하던 작업은 그대로 남아 있어요.
    - 5번 틀리면 10분 잠김 (localStorage 'mc_lock')
    들어가면 window 에 'wmhwc-unlock' 이벤트가 생겨요. */
@@ -26,8 +26,7 @@
     if(gate)return;document.documentElement.classList.add('wm-locked');
     gate=document.createElement('div');gate.id='wmGate';
     gate.innerHTML='<div class="gf"><h2>🔒 비밀번호</h2>'+(why?'<p class="why">'+why+'</p>':'')+
-      '<label for="wmPw">숫자 4자리를 누르면 바로 들어가요</label>'+
-      '<input type="password" id="wmPw" inputmode="numeric" maxlength="4" autocomplete="off"><p class="err" id="wmErr"></p></div>';
+      '<input type="password" id="wmPw" aria-label="비밀번호" inputmode="numeric" maxlength="4" autocomplete="off"><p class="err" id="wmErr"></p></div>';
     var put=function(){document.body.appendChild(gate);pw=gate.querySelector('#wmPw');err=gate.querySelector('#wmErr');
       pw.addEventListener('input',function(){pw.value=pw.value.replace(/\D/g,'');if(pw.value.length===4)tryPw()});
       lockTick();setTimeout(function(){pw&&pw.focus()},30)};
@@ -53,6 +52,19 @@
   setInterval(check,10000);
   document.addEventListener('visibilitychange',function(){if(!document.hidden)check()});
   window.addEventListener('focus',check);
+
+  // 도구 바꾸기 줄: 홈을 안 거치고 바로 다른 도구로 가요. 새 도구가 생기면 TOOLS 에 한 줄만 더해요.
+  var TOOLS=[['/','🏠 홈'],['/nameplate/','🏷️ 명찰 만들기'],['/report/','📊 결과보고 그래프']];
+  function nav(){
+    var here=location.pathname.replace(/index\.html$/,'');if(here==='/'||document.getElementById('wmNav'))return;
+    var n=document.createElement('nav');n.id='wmNav';
+    n.innerHTML=TOOLS.map(function(t){return t[0]===here?'<b>'+t[1]+'</b>':'<a href="'+t[0]+'">'+t[1]+'</a>'}).join('');
+    document.body.insertBefore(n,document.body.firstChild);
+  }
+  st.textContent+='#wmNav{display:flex;gap:6px;align-items:center;padding:6px 14px;background:#1d2733;font:700 14px "WandoCleansea","Malgun Gothic","맑은 고딕",sans-serif}'+
+   '#wmNav a,#wmNav b{padding:5px 12px;border-radius:8px;color:#cfd8e3;text-decoration:none}#wmNav a:hover{background:#33414f;color:#fff}#wmNav b{background:#fff;color:#1d2733}'+
+   '@media print{#wmNav{display:none!important}}';
+  if(document.body)nav();else document.addEventListener('DOMContentLoaded',nav);
 
   window.WMHWC={unlocked:function(){return !gate&&isOk()}};
   if(isOk()){ss('wmhwc_t',String(Date.now()))}else{ss('wmhwc_ok',null);show('')}

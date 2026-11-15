@@ -3,31 +3,45 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow">
 <title>업무 도구</title>
-<script src="/lock.js?v=4"></script>
+<script src="/lock.js?v=5"></script>
 <style>
 @font-face{font-family:"WandoCleansea";font-weight:400;src:url(/nameplate/fonts/cleanseaR.woff2) format("woff2")}
 @font-face{font-family:"WandoCleansea";font-weight:700;src:url(/nameplate/fonts/cleanseaB.woff2) format("woff2")}
-:root{--bg:#e9edf1;--panel:#fff;--ink:#1d2733;--muted:#5d6b7a;--line:#d3dae2;--accent:#1f5fa8;--soft:#f4f7fa}
+:root{--bg:#e9edf1;--panel:#fff;--ink:#1d2733;--muted:#4f5d6c;--line:#d3dae2;--accent:#1f5fa8;--soft:#f4f7fa}
 *{box-sizing:border-box}[hidden]{display:none!important}
 html,body{margin:0;min-height:100%;background:var(--bg);color:var(--ink);font-family:"WandoCleansea","Malgun Gothic","맑은 고딕",sans-serif}
-.home{max-width:760px;margin:0 auto;padding:56px 20px}
-h1{margin:0 0 6px;font-size:28px}
-.sub{margin:0 0 28px;color:var(--muted);font-size:15px}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}
-.card{display:flex;flex-direction:column;gap:8px;padding:22px 20px;background:var(--panel);border:1.5px solid var(--line);border-radius:14px;color:inherit;text-decoration:none;transition:border-color .15s,transform .15s}
-.card:hover{border-color:var(--accent);transform:translateY(-2px)}
-.card .ic{font-size:34px;line-height:1}
-.card b{font-size:19px}
-.card span{font-size:14px;color:var(--muted);line-height:1.5}
-.card.soon{opacity:.6;pointer-events:none}
-.card .tag{align-self:flex-start;font-size:12px;font-weight:700;color:#c2410c;background:#fff4e6;border-radius:999px;padding:2px 9px}
+.home{max-width:860px;margin:0 auto;padding:36px 20px 80px}
+h1{margin:0 0 6px;font-size:30px}
+.sub{margin:0 0 22px;color:var(--muted);font-size:17px}
+.filt{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.filt button{font:inherit;font-weight:700;font-size:18px;padding:10px 22px;border-radius:999px;border:2px solid var(--line);background:var(--panel);color:var(--ink);cursor:pointer}
+.filt button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px}
+li{background:var(--panel);border:1.5px solid var(--line);border-radius:14px;padding:16px 20px}
+.meta{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px;font-size:15px;color:var(--muted)}
+.tool{font-weight:700;font-size:15px;padding:3px 12px;border-radius:999px;color:#fff;background:#5d6b7a}
+.tool.t명찰{background:#1f5fa8}.tool.t그래프{background:#b4541a}
+.ver{font-weight:700;color:var(--ink)}
+.new{font-size:13px;font-weight:700;color:#fff;background:#e03131;border-radius:999px;padding:2px 9px}
+.txt{font-size:18px;line-height:1.65}
 </style></head><body>
-<main class="home" id="app">
- <h1>업무 도구</h1>
- <p class="sub">쓸 도구를 눌러주세요.</p>
- <div class="grid">
-  <a class="card" href="/nameplate/"><div class="ic">🏷️</div><b>명찰 만들기</b><span>계절 배경 명찰, 뒷면 비상연락망</span></a>
-  <a class="card" href="/report/"><div class="ic">📊</div><b>결과보고 그래프</b><span>사전·사후, 만족도, 성별 그래프를 만들고 한글 파일에 넣어요</span></a>
- </div>
+<main class="home">
+ <h1>업데이트 소식</h1>
+ <p class="sub">도구는 맨 위 <b>명찰</b>, <b>그래프</b>를 눌러서 바로 쓸 수 있어요. 여기서는 새로 바뀐 내용을 볼 수 있어요.</p>
+ <div class="filt" id="filt"></div>
+ <ul id="list"><li>불러오는 중…</li></ul>
 </main>
+<script>
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const nice=d=>{const m=/^(\d+)-(\d+)-(\d+)$/.exec(d||'');return m?`${+m[1]}년 ${+m[2]}월 ${+m[3]}일`:d||''};
+let UP=[],cur='전체';
+function draw(){
+  const tabs=['전체','명찰','그래프'];
+  document.getElementById('filt').innerHTML=tabs.map(t=>`<button type="button" class="${t===cur?'on':''}" data-t="${t}">${t}${t==='전체'?'':' 업데이트'}</button>`).join('');
+  const list=UP.filter(u=>cur==='전체'||u.도구===cur),newest=UP[0]&&UP[0].날짜;
+  document.getElementById('list').innerHTML=list.map((u,i)=>`<li><div class="meta"><span class="tool t${esc(u.도구)}">${esc(u.도구)}</span>${u.버전?`<span class="ver">v${esc(u.버전)}</span>`:''}<span>${nice(u.날짜)}</span>${i===0?'<span class="new">NEW</span>':''}</div><div class="txt">${esc(u.내용)}</div></li>`).join('')||'<li>아직 없어요.</li>';
+}
+document.getElementById('filt').addEventListener('click',e=>{const b=e.target.closest('button');if(b){cur=b.dataset.t;draw()}});
+fetch('/updates.json?t='+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(j=>{UP=j;draw()}).catch(()=>{document.getElementById('list').innerHTML='<li>업데이트 소식을 못 불러왔어요. 새로고침 해주세요.</li>'});
+</script>
 </body></html>

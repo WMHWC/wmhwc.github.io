@@ -59,8 +59,8 @@
     chart:'<path d="M4 20V4M4 20h16"/><rect x="7.5" y="11" width="3" height="6"/><rect x="12.5" y="7" width="3" height="10"/><rect x="17.5" y="13" width="2.5" height="4"/>',
     sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/>',
     moon:'<path d="M20 14.5A8.5 8.5 0 0 1 9.5 4 8.5 8.5 0 1 0 20 14.5z"/>'};
-  function svg(n){return '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+IC[n]+'</svg>'}
-  var TOOLS=[['/','home','홈'],['/nameplate/','tag','명찰 만들기'],['/report/','chart','결과보고 그래프']];
+  function svg(n){return '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+IC[n]+'</svg>'}
+  var TOOLS=[['/','home','홈'],['/nameplate/','tag','명찰'],['/report/','chart','그래프']];
   var LOGO='/nameplate/images/logo_bottom.png',SITE='완도군 정신건강복지센터';
   function ls(k,v){try{if(v===undefined)return localStorage.getItem(k);localStorage.setItem(k,v)}catch(e){return null}}
   var root=document.documentElement;
@@ -73,10 +73,10 @@
    'html[data-theme=dark] input:not([type=color]),html[data-theme=dark] textarea,html[data-theme=dark] select{background:#182233;color:#e8eef6;border-color:#273346}'+
    'html[data-theme=dark] #wmGate{background:#0a0f18;color:#e8eef6}html[data-theme=dark] #wmGate .gf{background:#121a26}'+
    'html[data-theme=dark] #wmNav{--nb:#0d131d;--nl:#1f2a3a;--nt:#a7b4c5;--nh:#18212f;--na:#1e2a3c;--ni:#fff}}'+
-   '#wmNav{--nb:#fff;--nl:#d9e0e8;--nt:#566373;--nh:#f1f4f7;--na:#e6ebf1;--ni:#1d2733;background:var(--nb);border-bottom:1px solid var(--nl);padding:12px max(16px,calc((100vw - 1180px)/2)) 10px;font-family:"WandoCleansea","Malgun Gothic","맑은 고딕",sans-serif}'+
-   '#wmNav .r1{display:flex;align-items:center;gap:10px;margin-bottom:10px}#wmNav .r1 img{height:34px;width:auto}#wmNav .r1 a{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ni);font-weight:700;font-size:18px;letter-spacing:-.01em}'+
-   '#wmTheme{display:grid;place-items:center;width:36px;height:36px;border-radius:10px;border:1px solid var(--nl);background:transparent;color:var(--nt);cursor:pointer;padding:0}#wmTheme:hover{background:var(--nh);color:var(--ni)}'+
-   '#wmNav .r2{display:flex;gap:4px;flex-wrap:wrap}#wmNav .r2 a{display:flex;align-items:center;gap:7px;padding:8px 14px;border-radius:10px;color:var(--nt);text-decoration:none;font-weight:700;font-size:15px}'+
+   '#wmNav{--nb:#fff;--nl:#d9e0e8;--nt:#3f4b59;--nh:#f1f4f7;--na:#e6ebf1;--ni:#1d2733;background:var(--nb);border-bottom:1px solid var(--nl);padding:12px max(16px,calc((100vw - 1180px)/2)) 10px;font-family:"WandoCleansea","Malgun Gothic","맑은 고딕",sans-serif}'+
+   '#wmNav .r1{display:flex;align-items:center;gap:10px;margin-bottom:10px}#wmNav .r1 img{height:34px;width:auto}#wmNav .r1 a{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ni);font-weight:700;font-size:20px;letter-spacing:-.01em}'+
+   '#wmTheme{display:grid;place-items:center;width:42px;height:42px;border-radius:10px;border:1px solid var(--nl);background:transparent;color:var(--nt);cursor:pointer;padding:0}#wmTheme:hover{background:var(--nh);color:var(--ni)}'+
+   '#wmNav .r2{display:flex;gap:6px;flex-wrap:wrap}#wmNav .r2 a{display:flex;align-items:center;gap:7px;padding:11px 22px;border-radius:12px;color:var(--nt);text-decoration:none;font-weight:700;font-size:19px}'+
    '#wmNav .r2 a:hover{background:var(--nh);color:var(--ni)}#wmNav .r2 a.on{background:var(--na);color:var(--ni)}'+
    '#wmSplash{position:fixed;inset:0;z-index:2147482000;display:grid;place-items:center;background:#e9edf1;color:#1d2733;transition:opacity .35s;font-family:"WandoCleansea","Malgun Gothic","맑은 고딕",sans-serif}'+
    'html[data-theme=dark] #wmSplash{background:#0a0f18;color:#e8eef6}#wmSplash.out{opacity:0;pointer-events:none}'+

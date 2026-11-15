@@ -3,6 +3,7 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow">
 <title>업무 도구</title>
+<script src="/lock.js"></script>
 <style>
 @font-face{font-family:"WandoCleansea";font-weight:400;src:url(/nameplate/fonts/cleanseaR.woff2) format("woff2")}
 @font-face{font-family:"WandoCleansea";font-weight:700;src:url(/nameplate/fonts/cleanseaB.woff2) format("woff2")}
@@ -20,48 +21,13 @@ h1{margin:0 0 6px;font-size:28px}
 .card span{font-size:14px;color:var(--muted);line-height:1.5}
 .card.soon{opacity:.6;pointer-events:none}
 .card .tag{align-self:flex-start;font-size:12px;font-weight:700;color:#c2410c;background:#fff4e6;border-radius:999px;padding:2px 9px}
-/* 비밀번호 팝업 (숫자 4개 누르면 바로 들어가요) */
-.gate{position:fixed;inset:0;z-index:50;background:rgba(20,30,40,.55);display:grid;place-items:center;padding:16px}
-.gform{background:var(--panel);border-radius:14px;padding:28px 24px;width:min(340px,100%);display:flex;flex-direction:column;gap:14px;text-align:center;box-shadow:0 10px 40px rgba(0,0,0,.25)}
-.gform h2{margin:0;font-size:20px}
-.gform label{font-size:14px;color:var(--muted)}
-.gform input{font:inherit;text-align:center;font-size:30px;letter-spacing:.5em;padding:12px;border:1.5px solid var(--line);border-radius:10px;width:100%}
-.gform input:focus{outline:none;border-color:var(--accent)}
-.gform input:disabled{opacity:.5}
-.err{color:#c0392b;font-size:14px;min-height:1.2em;margin:0}
 </style></head><body>
-<div class="gate" id="gate"><div class="gform">
- <h2>🔒 비밀번호</h2><label for="pw">숫자 4자리를 누르면 바로 들어가요</label>
- <input type="password" id="pw" inputmode="numeric" maxlength="4" autocomplete="off" autofocus>
- <p class="err" id="pwErr"></p></div></div>
-<main class="home" id="app" hidden>
+<main class="home" id="app">
  <h1>업무 도구</h1>
  <p class="sub">쓸 도구를 눌러주세요.</p>
  <div class="grid">
   <a class="card" href="/nameplate/"><div class="ic">🏷️</div><b>명찰 만들기</b><span>계절 배경 명찰, 뒷면 비상연락망</span></a>
-  <a class="card" href="/report/"><div class="ic">📊</div><b>결과보고 그래프</b><span>사전·사후, 만족도, 성별 그래프를 만들고 한글 파일에 넣어요</span><em class="tag">만드는 중</em></a>
+  <a class="card" href="/report/"><div class="ic">📊</div><b>결과보고 그래프</b><span>사전·사후, 만족도, 성별 그래프를 만들고 한글 파일에 넣어요</span></a>
  </div>
 </main>
-<script>
-// 비밀번호: 숫자를 그대로 적지 않고 계산값으로 비교해요. (명찰 만들기와 같은 비밀번호)
-// 한 번 맞히면 창을 닫기 전까지 다른 도구에서도 다시 안 물어봐요.
-const PW_SUM=2085881774;
-function h(s){let x=5381;for(const c of s)x=((x*33)^c.charCodeAt(0))>>>0;return x}
-const $=id=>document.getElementById(id);
-function ss(k,v){try{if(v===undefined)return sessionStorage.getItem(k);sessionStorage.setItem(k,v)}catch(e){return null}}
-let lock={f:0,u:0};try{lock=JSON.parse(localStorage.getItem('mc_lock'))||lock}catch(e){}
-function saveLock(){try{localStorage.setItem('mc_lock',JSON.stringify(lock))}catch(e){}}
-function unlock(){ $('gate').remove();$('app').hidden=false }
-function lockTick(){const left=lock.u-Date.now();
-  if(left>0){$('pw').disabled=true;const m=Math.floor(left/60000),s=Math.ceil(left%60000/1000);
-    $('pwErr').textContent=`5번 틀려서 잠겼어요. ${m}분 ${String(s===60?0:s).padStart(2,'0')}초 뒤에 다시 해주세요.`;setTimeout(lockTick,1000)}
-  else if($('pw').disabled){$('pw').disabled=false;$('pwErr').textContent='';$('pw').focus()}}
-function tryPw(){if(lock.u>Date.now())return;const v=$('pw').value.trim();
-  if(h(v)===PW_SUM){lock={f:0,u:0};saveLock();ss("wmhwc_ok","1");unlock();return}
-  lock.f++;$('pw').value='';
-  if(lock.f>=5){lock={f:0,u:Date.now()+10*60*1000};saveLock();lockTick();return}
-  saveLock();$('pwErr').textContent=`비밀번호가 달라요. (${lock.f}/5번 틀림)`;$('pw').focus()}
-if(ss("wmhwc_ok")==="1")unlock();
-else{$('pw').addEventListener('input',e=>{e.target.value=e.target.value.replace(/\D/g,'');if(e.target.value.length===4)tryPw()});lockTick()}
-</script>
 </body></html>

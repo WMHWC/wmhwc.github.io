@@ -79,7 +79,7 @@ li{background:var(--panel);border:1.5px solid var(--line);border-radius:14px;pad
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const nice=d=>{const m=/^(\d+)-(\d+)-(\d+)$/.exec(d||'');return m?`${+m[1]}년 ${+m[2]}월 ${+m[3]}일`:d||''};
 const ss=(k,v)=>{try{if(v===undefined)return sessionStorage.getItem(k);if(v===null)sessionStorage.removeItem(k);else sessionStorage.setItem(k,v)}catch(e){}};
-const ADM='0a4e3e70597a358b9447fa8a647aadf5b76dde95c8e4ab02e5f8cee6caa1cd28';
+const ADM='3ba447072b1bcb90321f2ed1d549832955a19dacb57c4c068f9f6367c6387ff0';
 const $=id=>document.getElementById(id);
 let UP=[],AU=null,cur='전체',admin=ss('wmhwc_admin')==='1';
 

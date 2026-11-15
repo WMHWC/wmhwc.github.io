@@ -24,24 +24,80 @@ li{background:var(--panel);border:1.5px solid var(--line);border-radius:14px;pad
 .ver{font-weight:700;color:var(--ink)}
 .new{font-size:13px;font-weight:700;color:#fff;background:#e03131;border-radius:999px;padding:2px 9px}
 .txt{font-size:18px;line-height:1.65}
+
+.tabs{display:flex;gap:10px;margin:0 0 20px;border-bottom:3px solid var(--line)}
+.tabs button{font:inherit;font-weight:700;font-size:21px;padding:12px 26px;border:0;border-bottom:4px solid transparent;margin-bottom:-3px;background:none;color:var(--muted);cursor:pointer}
+.tabs button.on{color:var(--accent);border-bottom-color:var(--accent)}
+.bar{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.adm{font:inherit;font-size:16px;font-weight:700;padding:9px 16px;border-radius:10px;border:2px dashed var(--line);background:none;color:var(--muted);cursor:pointer}
+.adm.on{border-style:solid;border-color:#2b8a3e;color:#2b8a3e}
+.admbox{display:flex;gap:8px;align-items:center;margin:-4px 0 16px;flex-wrap:wrap}
+.admbox input{font:inherit;font-size:18px;padding:9px 12px;border:2px solid var(--line);border-radius:10px;width:180px;background:var(--panel);color:var(--ink)}
+.admbox button{font:inherit;font-weight:700;font-size:17px;padding:9px 18px;border-radius:10px;border:0;background:var(--accent);color:#fff;cursor:pointer}
+.admbox .err{color:#e03131;font-size:16px}
+.det{margin-top:10px;padding:10px 14px;border-radius:10px;background:var(--soft);border-left:4px solid #2b8a3e;font-size:16px;line-height:1.6;color:var(--ink);white-space:pre-line}
+.det b{color:#2b8a3e}
+.ready{background:var(--panel);border:1.5px solid var(--line);border-radius:14px;padding:34px 24px;text-align:center}
+.ready .big{font-size:24px;font-weight:700;margin:0 0 10px}
+.ready p{font-size:18px;color:var(--muted);margin:6px 0;line-height:1.6}
 </style></head><body>
 <main class="home">
- <h1>업데이트 소식</h1>
- <p class="sub">도구는 맨 위 <b>명찰</b>, <b>그래프</b>를 눌러서 바로 쓸 수 있어요. 여기서는 새로 바뀐 내용을 볼 수 있어요.</p>
- <div class="filt" id="filt"></div>
- <ul id="list"><li>불러오는 중…</li></ul>
+ <h1>홈</h1>
+ <p class="sub">도구는 맨 위 <b>명찰</b>, <b>그래프</b>를 눌러서 바로 쓸 수 있어요.</p>
+ <div class="tabs" id="tabs">
+  <button type="button" class="on" data-p="up">📢 업데이트</button>
+  <button type="button" data-p="ask">💬 문의</button>
+ </div>
+
+ <section id="p-up">
+  <div class="bar">
+   <div class="filt" id="filt"></div>
+   <button type="button" class="adm" id="admBtn">🔒 관리자</button>
+  </div>
+  <form class="admbox" id="admBox" hidden>
+   <input type="password" id="admPw" placeholder="관리자 비밀번호" autocomplete="off">
+   <button type="submit">확인</button>
+   <span class="err" id="admErr"></span>
+  </form>
+  <ul id="list"><li>불러오는 중…</li></ul>
+ </section>
+
+ <section id="p-ask" hidden>
+  <div class="ready">
+   <p class="big">💬 문의는 준비 중이에요</p>
+   <p>불편한 점이나 바라는 점을 남길 수 있는 곳이 곧 생겨요.</p>
+   <p>그 전까지는 만든 사람에게 직접 말해주세요.</p>
+  </div>
+ </section>
 </main>
 <script>
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const nice=d=>{const m=/^(\d+)-(\d+)-(\d+)$/.exec(d||'');return m?`${+m[1]}년 ${+m[2]}월 ${+m[3]}일`:d||''};
-let UP=[],cur='전체';
+const ss=(k,v)=>{try{if(v===undefined)return sessionStorage.getItem(k);if(v===null)sessionStorage.removeItem(k);else sessionStorage.setItem(k,v)}catch(e){}};
+const ADM='0a4e3e70597a358b9447fa8a647aadf5b76dde95c8e4ab02e5f8cee6caa1cd28';
+let UP=[],cur='전체',admin=ss('wmhwc_admin')==='1';
+
+/* 큰 탭: 업데이트 / 문의 */
+document.getElementById('tabs').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
+  document.querySelectorAll('#tabs button').forEach(x=>x.classList.toggle('on',x===b));
+  document.getElementById('p-up').hidden=b.dataset.p!=='up';document.getElementById('p-ask').hidden=b.dataset.p!=='ask'});
+
 function draw(){
   const tabs=['전체','명찰','그래프'];
-  document.getElementById('filt').innerHTML=tabs.map(t=>`<button type="button" class="${t===cur?'on':''}" data-t="${t}">${t}${t==='전체'?'':' 업데이트'}</button>`).join('');
-  const list=UP.filter(u=>cur==='전체'||u.도구===cur),newest=UP[0]&&UP[0].날짜;
-  document.getElementById('list').innerHTML=list.map((u,i)=>`<li><div class="meta"><span class="tool t${esc(u.도구)}">${esc(u.도구)}</span>${u.버전?`<span class="ver">v${esc(u.버전)}</span>`:''}<span>${nice(u.날짜)}</span>${i===0?'<span class="new">NEW</span>':''}</div><div class="txt">${esc(u.내용)}</div></li>`).join('')||'<li>아직 없어요.</li>';
+  document.getElementById('filt').innerHTML=tabs.map(t=>`<button type="button" class="${t===cur?'on':''}" data-t="${t}">${t}</button>`).join('');
+  const ab=document.getElementById('admBtn');ab.classList.toggle('on',admin);ab.textContent=admin?'🔓 관리자 보기 끄기':'🔒 관리자';
+  const list=UP.filter(u=>cur==='전체'||u.도구===cur);
+  document.getElementById('list').innerHTML=list.map((u,i)=>`<li><div class="meta"><span class="tool t${esc(u.도구)}">${esc(u.도구)}</span>${u.버전?`<span class="ver">v${esc(u.버전)}</span>`:''}<span>${nice(u.날짜)}</span>${i===0&&cur==='전체'?'<span class="new">NEW</span>':''}</div><div class="txt">${esc(u.내용)}</div>${admin?`<div class="det"><b>관리자 메모</b>\n${u.자세히?esc(u.자세히):'(자세한 내용 없음)'}</div>`:''}</li>`).join('')||'<li>아직 없어요.</li>';
 }
 document.getElementById('filt').addEventListener('click',e=>{const b=e.target.closest('button');if(b){cur=b.dataset.t;draw()}});
+document.getElementById('admBtn').addEventListener('click',()=>{
+  if(admin){admin=false;ss('wmhwc_admin',null);draw();return}
+  const f=document.getElementById('admBox');f.hidden=!f.hidden;if(!f.hidden)document.getElementById('admPw').focus()});
+async function sha(t){const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(t));return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')}
+document.getElementById('admBox').addEventListener('submit',async e=>{e.preventDefault();
+  const p=document.getElementById('admPw');
+  if(await sha(p.value)===ADM){admin=true;ss('wmhwc_admin','1');p.value='';document.getElementById('admErr').textContent='';document.getElementById('admBox').hidden=true;draw()}
+  else{document.getElementById('admErr').textContent='비밀번호가 달라요';p.select()}});
 fetch('/updates.json?t='+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(j=>{UP=j;draw()}).catch(()=>{document.getElementById('list').innerHTML='<li>업데이트 소식을 못 불러왔어요. 새로고침 해주세요.</li>'});
 </script>
 </body></html>

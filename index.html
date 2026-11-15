@@ -29,9 +29,9 @@ li{background:var(--panel);border:1.5px solid var(--line);border-radius:14px;pad
 .tabs button{font:inherit;font-weight:700;font-size:21px;padding:12px 26px;border:0;border-bottom:4px solid transparent;margin-bottom:-3px;background:none;color:var(--muted);cursor:pointer}
 .tabs button.on{color:var(--accent);border-bottom-color:var(--accent)}
 .bar{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;flex-wrap:wrap}
-.adm{font:inherit;font-size:16px;font-weight:700;padding:9px 16px;border-radius:10px;border:2px dashed var(--line);background:none;color:var(--muted);cursor:pointer}
-.adm.on{border-style:solid;border-color:#2b8a3e;color:#2b8a3e}
-.admbox{display:flex;gap:8px;align-items:center;margin:-4px 0 16px;flex-wrap:wrap}
+.tabs .adm{margin:0 0 6px auto;align-self:center;font-size:15px;font-weight:700;padding:7px 14px;border-radius:10px;border:2px dashed var(--line);color:var(--muted)}
+.tabs .adm.on{border-style:solid;border-color:#2b8a3e;color:#2b8a3e}
+.admbox{display:flex;gap:8px;align-items:center;justify-content:flex-end;margin:-6px 0 16px;flex-wrap:wrap}
 .admbox input{font:inherit;font-size:18px;padding:9px 12px;border:2px solid var(--line);border-radius:10px;width:180px;background:var(--panel);color:var(--ink)}
 .admbox button{font:inherit;font-weight:700;font-size:17px;padding:9px 18px;border-radius:10px;border:0;background:var(--accent);color:#fff;cursor:pointer}
 .admbox .err{color:#e03131;font-size:16px}
@@ -47,13 +47,10 @@ li{background:var(--panel);border:1.5px solid var(--line);border-radius:14px;pad
   <button type="button" class="on" data-p="up">📢 업데이트</button>
   <button type="button" data-p="ask">💬 문의</button>
   <button type="button" data-p="adm" id="admTab" hidden>🔧 관리자 기록</button>
+  <button type="button" class="adm" id="admBtn">🔒 관리자</button>
  </div>
 
  <section id="p-up">
-  <div class="bar">
-   <div></div>
-   <button type="button" class="adm" id="admBtn">🔒 관리자</button>
-  </div>
   <form class="admbox" id="admBox" hidden>
    <input type="password" id="admPw" placeholder="관리자 비밀번호" autocomplete="off">
    <button type="submit">확인</button>
@@ -83,9 +80,9 @@ const ADM='3ba447072b1bcb90321f2ed1d549832955a19dacb57c4c068f9f6367c6387ff0';
 const $=id=>document.getElementById(id);
 let UP=[],AU=null,cur='전체',admin=ss('wmhwc_admin')==='1';
 
-function show(p){document.querySelectorAll('#tabs button').forEach(x=>x.classList.toggle('on',x.dataset.p===p));
+function show(p){document.querySelectorAll('#tabs button[data-p]').forEach(x=>x.classList.toggle('on',x.dataset.p===p));
   ['up','ask','adm'].forEach(k=>$('p-'+k).hidden=k!==p)}
-$('tabs').addEventListener('click',e=>{const b=e.target.closest('button');if(b)show(b.dataset.p)});
+$('tabs').addEventListener('click',e=>{const b=e.target.closest('button[data-p]');if(b)show(b.dataset.p)});
 
 /* 전체 공개 업데이트 */
 function drawPub(){

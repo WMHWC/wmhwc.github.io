@@ -91,7 +91,7 @@
    'html[data-theme=dark] input:not([type=color]),html[data-theme=dark] textarea,html[data-theme=dark] select{background:#182233;color:#e8eef6;border-color:#273346}'+
    'html[data-theme=dark] #wmGate{background:#0a0f18;color:#e8eef6}html[data-theme=dark] #wmGate .gf{background:#121a26}'+
    'html[data-theme=dark] #wmNav{--nb:#0d131d;--nl:#1f2a3a;--nt:#a7b4c5;--nh:#18212f;--na:#1e2a3c;--ni:#fff}}'+
-   '#wmNav{position:sticky;top:0;z-index:1000;--nb:#fff;--nl:#d9e0e8;--nt:#3f4b59;--nh:#f1f4f7;--na:#e6ebf1;--ni:#1d2733;background:var(--nb);border-bottom:1px solid var(--nl);padding:12px max(16px,calc((100vw - 1180px)/2)) 10px;font-family:"WandoCleansea","Malgun Gothic","맑은 고딕",sans-serif}'+
+   '#wmNav{position:sticky;top:0;z-index:1000;--nb:#fff;--nl:#d9e0e8;--nt:#3f4b59;--nh:#f1f4f7;--na:#e6ebf1;--ni:#1d2733;background:var(--nb);border-bottom:1px solid var(--nl);padding:12px 24px 10px;font-family:"WandoCleansea","Malgun Gothic","맑은 고딕",sans-serif}'+
    '#wmNav .r1{display:flex;align-items:center;gap:10px;margin-bottom:10px}#wmNav .r1 img{height:34px;width:auto}#wmNav .r1 a{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ni);font-weight:700;font-size:20px;letter-spacing:-.01em}'+
    '#wmTheme{display:grid;place-items:center;width:42px;height:42px;border-radius:10px;border:1px solid var(--nl);background:transparent;color:var(--nt);cursor:pointer;padding:0}#wmTheme:hover{background:var(--nh);color:var(--ni)}'+
    '#wmNav .r2{display:flex;gap:6px;flex-wrap:wrap}#wmNav .r2 a{display:flex;align-items:center;gap:7px;padding:11px 22px;border-radius:12px;color:var(--nt);text-decoration:none;font-weight:700;font-size:19px}'+
